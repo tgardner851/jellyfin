@@ -436,7 +436,7 @@ namespace MediaBrowser.MediaEncoding.Encoder
 
                 if (result == null || (result.Streams == null && result.Format == null))
                 {
-                    throw new Exception("ffprobe failed - streams and format are both null.");
+                    throw new FFmpegException("ffprobe failed - streams and format are both null.");
                 }
 
                 if (result.Streams != null)
@@ -581,8 +581,6 @@ namespace MediaBrowser.MediaEncoding.Encoder
                         vf = "-vf crop=iw:ih/2:0:0,setdar=dar=a,crop=min(iw\\,ih*dar):min(ih\\,iw/dar):(iw-min(iw\\,iw*sar))/2:(ih - min (ih\\,ih/sar))/2,setsar=sar=1";
                         // ftab crop heigt in half, set the display aspect,crop out any black bars we may have made
                         break;
-                    default:
-                        break;
                 }
             }
 
@@ -592,14 +590,7 @@ namespace MediaBrowser.MediaEncoding.Encoder
             if (enableHdrExtraction)
             {
                 string tonemapFilters = "zscale=t=linear:npl=100,format=gbrpf32le,zscale=p=bt709,tonemap=tonemap=hable:desat=0:peak=100,zscale=t=bt709:m=bt709,format=yuv420p";
-                if (string.IsNullOrEmpty(vf))
-                {
-                    vf = "-vf " + tonemapFilters;
-                }
-                else
-                {
-                    vf += "," + tonemapFilters;
-                }
+                vf += "," + tonemapFilters;
             }
 
             // Use ffmpeg to sample 100 (we can drop this if required using thumbnail=50 for 50 frames) frames and pick the best thumbnail. Have a fall back just in case.
@@ -620,19 +611,6 @@ namespace MediaBrowser.MediaEncoding.Encoder
             }
 
             var args = string.Format(CultureInfo.InvariantCulture, "-i {0}{3} -threads {4} -v quiet -vframes 1 {2} -f image2 \"{1}\"", inputPath, tempExtractPath, vf, mapArg, threads);
-
-            var probeSizeArgument = string.Empty;
-            var analyzeDurationArgument = string.Empty;
-
-            if (!string.IsNullOrWhiteSpace(probeSizeArgument))
-            {
-                args = probeSizeArgument + " " + args;
-            }
-
-            if (!string.IsNullOrWhiteSpace(analyzeDurationArgument))
-            {
-                args = analyzeDurationArgument + " " + args;
-            }
 
             if (offset.HasValue)
             {
@@ -711,7 +689,7 @@ namespace MediaBrowser.MediaEncoding.Encoder
 
                     _logger.LogError(msg);
 
-                    throw new Exception(msg);
+                    throw new FFmpegException(msg);
                 }
 
                 return tempExtractPath;
@@ -757,19 +735,6 @@ namespace MediaBrowser.MediaEncoding.Encoder
             var outputPath = Path.Combine(targetDirectory, filenamePrefix + "%05d.jpg");
 
             var args = string.Format(CultureInfo.InvariantCulture, "-i {0} -threads {3} -v quiet {2} -f image2 \"{1}\"", inputArgument, outputPath, vf, threads);
-
-            var probeSizeArgument = string.Empty;
-            var analyzeDurationArgument = string.Empty;
-
-            if (!string.IsNullOrWhiteSpace(probeSizeArgument))
-            {
-                args = probeSizeArgument + " " + args;
-            }
-
-            if (!string.IsNullOrWhiteSpace(analyzeDurationArgument))
-            {
-                args = analyzeDurationArgument + " " + args;
-            }
 
             if (videoStream != null)
             {
@@ -860,7 +825,7 @@ namespace MediaBrowser.MediaEncoding.Encoder
 
                     _logger.LogError(msg);
 
-                    throw new Exception(msg);
+                    throw new FFmpegException(msg);
                 }
             }
         }

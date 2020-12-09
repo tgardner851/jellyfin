@@ -130,10 +130,10 @@ namespace MediaBrowser.LocalMetadata.Parsers
         /// Fetches metadata from one Xml Element.
         /// </summary>
         /// <param name="reader">The reader.</param>
-        /// <param name="itemResult">The item result.</param>
-        protected virtual void FetchDataFromXmlNode(XmlReader reader, MetadataResult<T> itemResult)
+        /// <param name="result">The item result.</param>
+        protected virtual void FetchDataFromXmlNode(XmlReader reader, MetadataResult<T> result)
         {
-            var item = itemResult.Item;
+            var item = result.Item;
 
             switch (reader.Name)
             {
@@ -389,7 +389,7 @@ namespace MediaBrowser.LocalMetadata.Parsers
                             continue;
                         }
 
-                        itemResult.AddPerson(p);
+                        result.AddPerson(p);
                     }
 
                     break;
@@ -404,7 +404,7 @@ namespace MediaBrowser.LocalMetadata.Parsers
                             continue;
                         }
 
-                        itemResult.AddPerson(p);
+                        result.AddPerson(p);
                     }
 
                     break;
@@ -419,7 +419,7 @@ namespace MediaBrowser.LocalMetadata.Parsers
                         // This is one of the mis-named "Actors" full nodes created by MB2
                         // Create a reader and pass it to the persons node processor
                         using var xmlReader = XmlReader.Create(new StringReader($"<Persons>{actors}</Persons>"));
-                        FetchDataFromPersonsNode(xmlReader, itemResult);
+                        FetchDataFromPersonsNode(xmlReader, result);
                     }
                     else
                     {
@@ -431,7 +431,7 @@ namespace MediaBrowser.LocalMetadata.Parsers
                                 continue;
                             }
 
-                            itemResult.AddPerson(p);
+                            result.AddPerson(p);
                         }
                     }
 
@@ -447,7 +447,7 @@ namespace MediaBrowser.LocalMetadata.Parsers
                             continue;
                         }
 
-                        itemResult.AddPerson(p);
+                        result.AddPerson(p);
                     }
 
                     break;
@@ -606,7 +606,7 @@ namespace MediaBrowser.LocalMetadata.Parsers
                     if (!reader.IsEmptyElement)
                     {
                         using var subtree = reader.ReadSubtree();
-                        FetchDataFromPersonsNode(subtree, itemResult);
+                        FetchDataFromPersonsNode(subtree, result);
                     }
                     else
                     {
@@ -1276,8 +1276,8 @@ namespace MediaBrowser.LocalMetadata.Parsers
 
             // Only split by comma if there is no pipe in the string
             // We have to be careful to not split names like Matthew, Jr.
-            var separator = value.IndexOf('|', StringComparison.Ordinal) == -1
-                            && value.IndexOf(';', StringComparison.Ordinal) == -1 ? new[] { ',' } : new[] { '|', ';' };
+            var separator = !value.Contains('|', StringComparison.Ordinal)
+                            && !value.Contains(';', StringComparison.Ordinal) ? new[] { ',' } : new[] { '|', ';' };
 
             value = value.Trim().Trim(separator);
 

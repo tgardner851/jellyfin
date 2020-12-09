@@ -348,11 +348,7 @@ namespace MediaBrowser.XbmcMetadata.Savers
                     writer.WriteElementString("language", Regex.Replace(stream.Language, _invalidXMLCharsRegex, string.Empty));
                 }
 
-                var scanType = stream.IsInterlaced ? "interlaced" : "progressive";
-                if (!string.IsNullOrEmpty(scanType))
-                {
-                    writer.WriteElementString("scantype", scanType);
-                }
+                writer.WriteElementString("scantype", stream.IsInterlaced ? "interlaced" : "progressive");
 
                 if (stream.Channels.HasValue)
                 {

@@ -1,4 +1,6 @@
 #pragma warning disable CS1591
+#pragma warning disable SA1611 // ElementParametersMustBeDocumented
+#pragma warning disable SA1615 // ElementReturnValueMustBeDocumented
 
 using System.Net;
 

@@ -23,9 +23,9 @@ namespace Emby.Naming.Video
         public string Name { get; set; } = string.Empty;
 
         /// <summary>
-        /// Gets or sets list of paths in stack.
+        /// Gets list of paths in stack.
         /// </summary>
-        public List<string> Files { get; set; }
+        public List<string> Files { get; }
 
         /// <summary>
         /// Gets or sets a value indicating whether stack is directory stack.

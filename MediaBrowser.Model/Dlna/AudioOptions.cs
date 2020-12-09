@@ -66,6 +66,7 @@ namespace MediaBrowser.Model.Dlna
         /// <summary>
         /// Gets the maximum bitrate.
         /// </summary>
+        /// <param name="isAudio"><c>true</c> id the stream is audio; otherwise <c>false</c>.</param>
         /// <returns>System.Nullable&lt;System.Int32&gt;.</returns>
         public int? GetMaxBitrate(bool isAudio)
         {

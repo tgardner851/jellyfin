@@ -1,3 +1,5 @@
+#pragma warning disable SA1611 // ElementParametersMustBeDocumented
+
 using System;
 using Microsoft.Extensions.Logging;
 

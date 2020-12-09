@@ -56,7 +56,7 @@ namespace MediaBrowser.Common.Plugins
         /// Gets a value indicating whether the plugin can be uninstalled.
         /// </summary>
         public bool CanUninstall => !Path.GetDirectoryName(AssemblyFilePath)
-            .Equals(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), StringComparison.InvariantCulture);
+            .Equals(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), StringComparison.Ordinal);
 
         /// <summary>
         /// Gets the plugin info.
@@ -131,30 +131,24 @@ namespace MediaBrowser.Common.Plugins
         {
             ApplicationPaths = applicationPaths;
             XmlSerializer = xmlSerializer;
-            if (this is IPluginAssembly assemblyPlugin)
+            var assembly = GetType().Assembly;
+            var assemblyName = assembly.GetName();
+            var assemblyFilePath = assembly.Location;
+
+            var dataFolderPath = Path.Combine(ApplicationPaths.PluginsPath, Path.GetFileNameWithoutExtension(assemblyFilePath));
+
+            SetAttributes(assemblyFilePath, dataFolderPath, assemblyName.Version);
+
+            var idAttributes = assembly.GetCustomAttributes(typeof(GuidAttribute), true);
+            if (idAttributes.Length > 0)
             {
-                var assembly = GetType().Assembly;
-                var assemblyName = assembly.GetName();
-                var assemblyFilePath = assembly.Location;
+                var attribute = (GuidAttribute)idAttributes[0];
+                var assemblyId = new Guid(attribute.Value);
 
-                var dataFolderPath = Path.Combine(ApplicationPaths.PluginsPath, Path.GetFileNameWithoutExtension(assemblyFilePath));
-
-                assemblyPlugin.SetAttributes(assemblyFilePath, dataFolderPath, assemblyName.Version);
-
-                var idAttributes = assembly.GetCustomAttributes(typeof(GuidAttribute), true);
-                if (idAttributes.Length > 0)
-                {
-                    var attribute = (GuidAttribute)idAttributes[0];
-                    var assemblyId = new Guid(attribute.Value);
-
-                    assemblyPlugin.SetId(assemblyId);
-                }
+                SetId(assemblyId);
             }
 
-            if (this is IHasPluginConfiguration hasPluginConfiguration)
-            {
-                hasPluginConfiguration.SetStartupInfo(s => Directory.CreateDirectory(s));
-            }
+            SetStartupInfo(s => Directory.CreateDirectory(s));
         }
 
         /// <summary>

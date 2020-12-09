@@ -1,5 +1,6 @@
 #nullable disable
 #pragma warning disable CS1591
+#pragma warning disable SA1300 // ElementMustBeginWithUpperCaseLetter
 
 using System;
 
@@ -18,7 +19,7 @@ namespace MediaBrowser.Model.Entities
         public int rating { get; set; }
 
         /// <summary>
-        /// Gets or sets whether or not this review recommends this item.
+        /// Gets or sets a value indicating whether or not this review recommends this item.
         /// </summary>
         public bool recommend { get; set; }
 

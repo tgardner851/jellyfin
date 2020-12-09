@@ -1,6 +1,7 @@
 #nullable disable
 
 using System;
+#pragma warning disable SA1300 // ElementMustBeginWithUpperCaseLetter
 
 namespace MediaBrowser.Model.Updates
 {

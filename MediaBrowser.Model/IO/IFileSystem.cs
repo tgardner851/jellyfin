@@ -1,5 +1,7 @@
 #nullable disable
 #pragma warning disable CS1591
+#pragma warning disable SA1611 // ElementParametersMustBeDocumented
+#pragma warning disable SA1615 // ElementReturnValueMustBeDocumented
 
 using System;
 using System.Collections.Generic;
@@ -52,7 +54,7 @@ namespace MediaBrowser.Model.IO
         /// <returns>A <see cref="FileSystemMetadata" /> object.</returns>
         /// <remarks><para>If the specified path points to a directory, the returned <see cref="FileSystemMetadata" /> object's
         /// <see cref="FileSystemMetadata.IsDirectory" /> property and the <see cref="FileSystemMetadata.Exists" /> property will both be set to false.</para>
-        /// <para>For automatic handling of files <b>and</b> directories, use <see cref="M:IFileSystem.GetFileSystemInfo(System.String)" />.</para></remarks>
+        /// <para>For automatic handling of files <b>and</b> directories, use <see cref="GetFileSystemInfo(string)" />.</para></remarks>
         FileSystemMetadata GetFileInfo(string path);
 
         /// <summary>
@@ -62,7 +64,7 @@ namespace MediaBrowser.Model.IO
         /// <returns>A <see cref="FileSystemMetadata" /> object.</returns>
         /// <remarks><para>If the specified path points to a file, the returned <see cref="FileSystemMetadata" /> object's
         /// <see cref="FileSystemMetadata.IsDirectory" /> property will be set to true and the <see cref="FileSystemMetadata.Exists" /> property will be set to false.</para>
-        /// <para>For automatic handling of files <b>and</b> directories, use <see cref="M:IFileSystem.GetFileSystemInfo(System.String)" />.</para></remarks>
+        /// <para>For automatic handling of files <b>and</b> directories, use <see cref="GetFileSystemInfo(string)" />.</para></remarks>
         FileSystemMetadata GetDirectoryInfo(string path);
 
         /// <summary>

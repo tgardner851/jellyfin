@@ -19,7 +19,7 @@ namespace MediaBrowser.XbmcMetadata.Providers
         private readonly IConfigurationManager _config;
         private readonly IProviderManager _providerManager;
 
-        public BaseVideoNfoProvider(
+        protected BaseVideoNfoProvider(
             ILogger<BaseVideoNfoProvider<T>> logger,
             IFileSystem fileSystem,
             IConfigurationManager config,

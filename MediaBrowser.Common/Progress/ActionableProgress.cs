@@ -1,3 +1,4 @@
+#pragma warning disable CA1003 // Use generic event handler instances
 #pragma warning disable CS1591
 
 using System;

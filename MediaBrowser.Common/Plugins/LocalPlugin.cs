@@ -80,7 +80,7 @@ namespace MediaBrowser.Common.Plugins
         /// <returns>Comparison result.</returns>
         public static int Compare(LocalPlugin a, LocalPlugin b)
         {
-            var compare = string.Compare(a.Name, b.Name, true, CultureInfo.InvariantCulture);
+            var compare = string.Compare(a.Name, b.Name, StringComparison.OrdinalIgnoreCase);
 
             // Id is not equal but name is.
             if (a.Id != b.Id && compare == 0)

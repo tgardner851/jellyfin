@@ -235,8 +235,12 @@ namespace Emby.Dlna.PlayTo
             _logger.LogDebug("Setting mute");
             var value = mute ? 1 : 0;
 
-            await new SsdpHttpClient(_httpClientFactory).SendCommandAsync(Properties.BaseUrl, service, command.Name, rendererCommands.BuildPost(command, service.ServiceType, value))
-                .ConfigureAwait(false);
+            await new SsdpHttpClient(_httpClientFactory).SendCommandAsync(
+                Properties.BaseUrl,
+                service,
+                command.Name,
+                rendererCommands.BuildPost(command, service.ServiceType, value),
+                cancellationToken: cancellationToken).ConfigureAwait(false);
 
             IsMuted = mute;
 
@@ -270,8 +274,12 @@ namespace Emby.Dlna.PlayTo
             // Remote control will perform better
             Volume = value;
 
-            await new SsdpHttpClient(_httpClientFactory).SendCommandAsync(Properties.BaseUrl, service, command.Name, rendererCommands.BuildPost(command, service.ServiceType, value))
-                .ConfigureAwait(false);
+            await new SsdpHttpClient(_httpClientFactory).SendCommandAsync(
+                Properties.BaseUrl,
+                service,
+                command.Name,
+                rendererCommands.BuildPost(command, service.ServiceType, value),
+                cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
         public async Task Seek(TimeSpan value, CancellationToken cancellationToken)
@@ -291,8 +299,12 @@ namespace Emby.Dlna.PlayTo
                 throw new InvalidOperationException("Unable to find service");
             }
 
-            await new SsdpHttpClient(_httpClientFactory).SendCommandAsync(Properties.BaseUrl, service, command.Name, avCommands.BuildPost(command, service.ServiceType, string.Format(CultureInfo.InvariantCulture, "{0:hh}:{0:mm}:{0:ss}", value), "REL_TIME"))
-                .ConfigureAwait(false);
+            await new SsdpHttpClient(_httpClientFactory).SendCommandAsync(
+                Properties.BaseUrl,
+                service,
+                command.Name,
+                avCommands.BuildPost(command, service.ServiceType, string.Format(CultureInfo.InvariantCulture, "{0:hh}:{0:mm}:{0:ss}", value), "REL_TIME"),
+                cancellationToken: cancellationToken).ConfigureAwait(false);
 
             RestartTimer(true);
         }
@@ -325,10 +337,10 @@ namespace Emby.Dlna.PlayTo
             }
 
             var post = avCommands.BuildPost(command, service.ServiceType, url, dictionary);
-            await new SsdpHttpClient(_httpClientFactory).SendCommandAsync(Properties.BaseUrl, service, command.Name, post, header: header)
+            await new SsdpHttpClient(_httpClientFactory).SendCommandAsync(Properties.BaseUrl, service, command.Name, post, header: header, cancellationToken)
                 .ConfigureAwait(false);
 
-            await Task.Delay(50).ConfigureAwait(false);
+            await Task.Delay(50, cancellationToken).ConfigureAwait(false);
 
             try
             {
@@ -396,8 +408,12 @@ namespace Emby.Dlna.PlayTo
 
             var service = GetAvTransportService();
 
-            await new SsdpHttpClient(_httpClientFactory).SendCommandAsync(Properties.BaseUrl, service, command.Name, avCommands.BuildPost(command, service.ServiceType, 1))
-                .ConfigureAwait(false);
+            await new SsdpHttpClient(_httpClientFactory).SendCommandAsync(
+                Properties.BaseUrl,
+                service,
+                command.Name,
+                avCommands.BuildPost(command, service.ServiceType, 1),
+                cancellationToken: cancellationToken).ConfigureAwait(false);
 
             RestartTimer(true);
         }
@@ -414,8 +430,12 @@ namespace Emby.Dlna.PlayTo
 
             var service = GetAvTransportService();
 
-            await new SsdpHttpClient(_httpClientFactory).SendCommandAsync(Properties.BaseUrl, service, command.Name, avCommands.BuildPost(command, service.ServiceType, 1))
-                .ConfigureAwait(false);
+            await new SsdpHttpClient(_httpClientFactory).SendCommandAsync(
+                Properties.BaseUrl,
+                service,
+                command.Name,
+                avCommands.BuildPost(command, service.ServiceType, 1),
+                cancellationToken: cancellationToken).ConfigureAwait(false);
 
             TransportState = TransportState.Paused;
 

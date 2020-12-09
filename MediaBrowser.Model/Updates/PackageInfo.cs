@@ -1,4 +1,6 @@
 #nullable disable
+#pragma warning disable SA1300 // ElementMustBeginWithUpperCaseLetter
+
 using System;
 using System.Collections.Generic;
 

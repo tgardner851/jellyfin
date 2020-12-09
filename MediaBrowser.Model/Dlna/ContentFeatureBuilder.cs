@@ -158,8 +158,10 @@ namespace MediaBrowser.Model.Dlna
             //    flagValue = flagValue | DlnaFlags.TimeBasedSeek;
             //}
 
-            string dlnaflags = string.Format(CultureInfo.InvariantCulture, ";DLNA.ORG_FLAGS={0}",
-             DlnaMaps.FlagsToString(flagValue));
+            string dlnaflags = string.Format(
+                CultureInfo.InvariantCulture,
+                ";DLNA.ORG_FLAGS={0}",
+                DlnaMaps.FlagsToString(flagValue));
 
             ResponseProfile mediaProfile = _profile.GetVideoMediaProfile(
                 container,

@@ -1,4 +1,6 @@
 #pragma warning disable CS1591
+#pragma warning disable SA1611 // ElementParametersMustBeDocumented
+#pragma warning disable SA1615 // ElementReturnValueMustBeDocumented
 
 using System;
 using System.Collections.Generic;
@@ -91,9 +93,9 @@ namespace MediaBrowser.Model.Net
             { ".webp", "image/webp" },
 
             // Type font
-            { ".ttf" , "font/ttf" },
-            { ".woff" , "font/woff" },
-            { ".woff2" , "font/woff2" },
+            { ".ttf", "font/ttf" },
+            { ".woff", "font/woff" },
+            { ".woff2", "font/woff2" },
 
             // Type text
             { ".ass", "text/x-ssa" },

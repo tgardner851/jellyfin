@@ -447,7 +447,7 @@ namespace Jellyfin.Drawing.Skia
         }
 
         /// <inheritdoc/>
-        public string EncodeImage(string inputPath, DateTime dateModified, string outputPath, bool autoOrient, ImageOrientation? orientation, int quality, ImageProcessingOptions options, ImageFormat selectedOutputFormat)
+        public string EncodeImage(string inputPath, DateTime dateModified, string outputPath, bool autoOrient, ImageOrientation? orientation, int quality, ImageProcessingOptions options, ImageFormat outputFormat)
         {
             if (inputPath.Length == 0)
             {
@@ -459,7 +459,7 @@ namespace Jellyfin.Drawing.Skia
                 throw new ArgumentException("String can't be empty.", nameof(outputPath));
             }
 
-            var skiaOutputFormat = GetImageFormat(selectedOutputFormat);
+            var skiaOutputFormat = GetImageFormat(outputFormat);
 
             var hasBackgroundColor = !string.IsNullOrWhiteSpace(options.BackgroundColor);
             var hasForegroundColor = !string.IsNullOrWhiteSpace(options.ForegroundLayer);
