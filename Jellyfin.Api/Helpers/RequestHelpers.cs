@@ -84,7 +84,7 @@ namespace Jellyfin.Api.Helpers
                 authorization.Version,
                 authorization.DeviceId,
                 authorization.Device,
-                request.HttpContext.GetNormalizedRemoteIp(),
+                request.HttpContext.GetNormalizedRemoteIp().ToString(),
                 user);
 
             if (session == null)
@@ -128,6 +128,22 @@ namespace Jellyfin.Api.Helpers
                 Items = dtos.ToArray(),
                 TotalRecordCount = result.TotalRecordCount
             };
+        }
+
+        internal static string[] GetItemTypeStrings(IReadOnlyList<BaseItemKind> itemKinds)
+        {
+            if (itemKinds.Count == 0)
+            {
+                return Array.Empty<string>();
+            }
+
+            var itemTypes = new string[itemKinds.Count];
+            for (var i = 0; i < itemKinds.Count; i++)
+            {
+                itemTypes[i] = itemKinds[i].ToString();
+            }
+
+            return itemTypes;
         }
     }
 }

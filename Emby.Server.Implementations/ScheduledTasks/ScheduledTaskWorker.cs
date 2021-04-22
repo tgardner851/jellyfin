@@ -4,7 +4,6 @@ using System;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -69,7 +68,7 @@ namespace Emby.Server.Implementations.ScheduledTasks
         /// <summary>
         /// The options for the json Serializer.
         /// </summary>
-        private readonly JsonSerializerOptions _jsonOptions = JsonDefaults.GetOptions();
+        private readonly JsonSerializerOptions _jsonOptions = JsonDefaults.Options;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ScheduledTaskWorker" /> class.
@@ -143,21 +142,21 @@ namespace Emby.Server.Implementations.ScheduledTasks
                     {
                         if (File.Exists(path))
                         {
-                            try
+                            var bytes = File.ReadAllBytes(path);
+                            if (bytes.Length > 0)
                             {
-                                var jsonString = File.ReadAllText(path, Encoding.UTF8);
-                                if (!string.IsNullOrWhiteSpace(jsonString))
+                                try
                                 {
-                                    _lastExecutionResult = JsonSerializer.Deserialize<TaskResult>(jsonString, _jsonOptions);
+                                    _lastExecutionResult = JsonSerializer.Deserialize<TaskResult>(bytes, _jsonOptions);
                                 }
-                                else
+                                catch (JsonException ex)
                                 {
-                                    _logger.LogDebug("Scheduled Task history file {Path} is empty. Skipping deserialization.", path);
+                                    _logger.LogError(ex, "Error deserializing {File}", path);
                                 }
                             }
-                            catch (Exception ex)
+                            else
                             {
-                                _logger.LogError(ex, "Error deserializing {File}", path);
+                                _logger.LogDebug("Scheduled Task history file {Path} is empty. Skipping deserialization.", path);
                             }
                         }
 
@@ -178,7 +177,8 @@ namespace Emby.Server.Implementations.ScheduledTasks
                 lock (_lastExecutionResultSyncLock)
                 {
                     using FileStream createStream = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None);
-                    JsonSerializer.SerializeAsync(createStream, value, _jsonOptions);
+                    using Utf8JsonWriter jsonStream = new Utf8JsonWriter(createStream);
+                    JsonSerializer.Serialize(jsonStream, value, _jsonOptions);
                 }
             }
         }
@@ -541,8 +541,8 @@ namespace Emby.Server.Implementations.ScheduledTasks
             TaskTriggerInfo[] list = null;
             if (File.Exists(path))
             {
-                var jsonString = File.ReadAllText(path, Encoding.UTF8);
-                list = JsonSerializer.Deserialize<TaskTriggerInfo[]>(jsonString, _jsonOptions);
+                var bytes = File.ReadAllBytes(path);
+                list = JsonSerializer.Deserialize<TaskTriggerInfo[]>(bytes, _jsonOptions);
             }
 
             // Return defaults if file doesn't exist.
@@ -578,7 +578,8 @@ namespace Emby.Server.Implementations.ScheduledTasks
 
             Directory.CreateDirectory(Path.GetDirectoryName(path));
             using FileStream createStream = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None);
-            JsonSerializer.SerializeAsync(createStream, triggers, _jsonOptions);
+            using Utf8JsonWriter jsonWriter = new Utf8JsonWriter(createStream);
+            JsonSerializer.Serialize(jsonWriter, triggers, _jsonOptions);
         }
 
         /// <summary>

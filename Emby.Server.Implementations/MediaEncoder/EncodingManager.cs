@@ -15,7 +15,6 @@ using MediaBrowser.Controller.Providers;
 using MediaBrowser.Model.Dto;
 using MediaBrowser.Model.Entities;
 using MediaBrowser.Model.IO;
-using MediaBrowser.Model.MediaInfo;
 using Microsoft.Extensions.Logging;
 
 namespace Emby.Server.Implementations.MediaEncoder
@@ -78,11 +77,6 @@ namespace Emby.Server.Implementations.MediaEncoder
                 }
             }
             else
-            {
-                return false;
-            }
-
-            if (video.VideoType == VideoType.Dvd)
             {
                 return false;
             }
@@ -166,7 +160,7 @@ namespace Emby.Server.Implementations.MediaEncoder
                         }
                         catch (Exception ex)
                         {
-                            _logger.LogError(ex, "Error extracting chapter images for {0}", string.Join(",", video.Path));
+                            _logger.LogError(ex, "Error extracting chapter images for {0}", string.Join(',', video.Path));
                             success = false;
                             break;
                         }

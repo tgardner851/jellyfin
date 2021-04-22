@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using MediaBrowser.Model.Dlna;
 using MediaBrowser.Model.Dto;
 using MediaBrowser.Model.Entities;
-using MediaBrowser.Model.IO;
 using MediaBrowser.Model.MediaInfo;
 using MediaBrowser.Model.System;
 
@@ -49,6 +48,14 @@ namespace MediaBrowser.Controller.MediaEncoding
         /// <param name="hwaccel">The hwaccel.</param>
         /// <returns><c>true</c> if XXXX, <c>false</c> otherwise.</returns>
         bool SupportsHwaccel(string hwaccel);
+
+        /// <summary>
+        /// Whether given filter is supported.
+        /// </summary>
+        /// <param name="filter">The filter.</param>
+        /// <param name="option">The option.</param>
+        /// <returns><c>true</c> if the filter is supported, <c>false</c> otherwise.</returns>
+        bool SupportsFilter(string filter, string option);
 
         /// <summary>
         /// Extracts the audio image.

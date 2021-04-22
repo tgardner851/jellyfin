@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -133,6 +132,11 @@ namespace Emby.Server.Implementations.LiveTv.TunerHosts
                 channel.ImageUrl = value;
             }
 
+            if (attributes.TryGetValue("group-title", out string groupTitle))
+            {
+                channel.ChannelGroup = groupTitle;
+            }
+
             channel.Name = GetChannelName(extInf, attributes);
             channel.Number = GetChannelNumber(extInf, attributes, mediaUrl);
 
@@ -155,7 +159,7 @@ namespace Emby.Server.Implementations.LiveTv.TunerHosts
 
             if (channelIdValues.Count > 0)
             {
-                channel.Id = string.Join("_", channelIdValues);
+                channel.Id = string.Join('_', channelIdValues);
             }
 
             return channel;

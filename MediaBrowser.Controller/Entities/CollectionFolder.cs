@@ -26,7 +26,7 @@ namespace MediaBrowser.Controller.Entities
     /// </summary>
     public class CollectionFolder : Folder, ICollectionFolder
     {
-        private static readonly JsonSerializerOptions _jsonOptions = JsonDefaults.GetOptions();
+        private static readonly JsonSerializerOptions _jsonOptions = JsonDefaults.Options;
         public static IXmlSerializer XmlSerializer { get; set; }
 
         public static IServerApplicationHost ApplicationHost { get; set; }
@@ -123,7 +123,7 @@ namespace MediaBrowser.Controller.Entities
             {
                 LibraryOptions[path] = options;
 
-                var clone = JsonSerializer.Deserialize<LibraryOptions>(JsonSerializer.Serialize(options, _jsonOptions), _jsonOptions);
+                var clone = JsonSerializer.Deserialize<LibraryOptions>(JsonSerializer.SerializeToUtf8Bytes(options, _jsonOptions), _jsonOptions);
                 foreach (var mediaPath in clone.PathInfos)
                 {
                     if (!string.IsNullOrEmpty(mediaPath.Path))

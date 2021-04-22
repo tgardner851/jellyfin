@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -49,7 +48,7 @@ namespace Emby.Server.Implementations.Channels
         private readonly IProviderManager _providerManager;
         private readonly IMemoryCache _memoryCache;
         private readonly SemaphoreSlim _resourcePool = new SemaphoreSlim(1, 1);
-        private readonly JsonSerializerOptions _jsonOptions = JsonDefaults.GetOptions();
+        private readonly JsonSerializerOptions _jsonOptions = JsonDefaults.Options;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ChannelManager"/> class.
@@ -336,19 +335,19 @@ namespace Emby.Server.Implementations.Channels
             return GetChannel(GetInternalChannelId(channel.Name)) ?? GetChannel(channel, CancellationToken.None).Result;
         }
 
-        private List<MediaSourceInfo> GetSavedMediaSources(BaseItem item)
+        private MediaSourceInfo[] GetSavedMediaSources(BaseItem item)
         {
             var path = Path.Combine(item.GetInternalMetadataPath(), "channelmediasourceinfos.json");
 
             try
             {
-                var jsonString = File.ReadAllText(path, Encoding.UTF8);
-                return JsonSerializer.Deserialize<List<MediaSourceInfo>>(jsonString, _jsonOptions)
-                    ?? new List<MediaSourceInfo>();
+                var bytes = File.ReadAllBytes(path);
+                return JsonSerializer.Deserialize<MediaSourceInfo[]>(bytes, _jsonOptions)
+                    ?? Array.Empty<MediaSourceInfo>();
             }
             catch
             {
-                return new List<MediaSourceInfo>();
+                return Array.Empty<MediaSourceInfo>();
             }
         }
 

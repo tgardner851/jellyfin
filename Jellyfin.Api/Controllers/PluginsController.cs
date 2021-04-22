@@ -1,10 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Net.Mime;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Jellyfin.Api.Attributes;
@@ -14,7 +12,6 @@ using MediaBrowser.Common.Configuration;
 using MediaBrowser.Common.Json;
 using MediaBrowser.Common.Plugins;
 using MediaBrowser.Common.Updates;
-using MediaBrowser.Model.Configuration;
 using MediaBrowser.Model.Net;
 using MediaBrowser.Model.Plugins;
 using Microsoft.AspNetCore.Authorization;
@@ -47,7 +44,7 @@ namespace Jellyfin.Api.Controllers
         {
             _installationManager = installationManager;
             _pluginManager = pluginManager;
-            _serializerOptions = JsonDefaults.GetOptions();
+            _serializerOptions = JsonDefaults.Options;
             _config = config;
         }
 
@@ -300,9 +297,7 @@ namespace Jellyfin.Api.Controllers
             }
 
             var imagePath = Path.Combine(plugin.Path, plugin.Manifest.ImagePath ?? string.Empty);
-            if (((ServerConfiguration)_config.CommonConfiguration).DisablePluginImages
-                || plugin.Manifest.ImagePath == null
-                || !System.IO.File.Exists(imagePath))
+            if (plugin.Manifest.ImagePath == null || !System.IO.File.Exists(imagePath))
             {
                 return NotFound();
             }
